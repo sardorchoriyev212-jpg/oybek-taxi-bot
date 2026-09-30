@@ -43,12 +43,12 @@ async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"Haydovchi tez orada siz bilan bog'lanadi!"
     )
 
-if __name__== "main":
+if  __name__ == "__main__":
     app = ApplicationBuilder().token(BOT_TOKEN).build()
-    
+
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(MessageHandler(filters.LOCATION, handle_location))
-    
+
     print("Bot ishga tushdi...")
     app.run_polling()
