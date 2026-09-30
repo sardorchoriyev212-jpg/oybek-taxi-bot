@@ -2,17 +2,17 @@ import logging
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
+# Logging sozlamalari
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
 
 # -------------------------------------------------------------
-# ADMIN MA'LUMOTLARI
-# Telegram ID'ingizni @userinfobot orqali bilib, shu yerga yozing:
-ADMIN_ID =  8979390721
-
+# ADMIN MA'LUMOTLARI VA BOT TOKENI
+ADMIN_ID = 8979390721
 ADMIN_USERNAME = "@Asqarovich2006"
+BOT_TOKEN = "8744240008:AAFJfENrydrUh13j64RFG0q9gaPiPsFfXnc"
 # -------------------------------------------------------------
 
 # Asosiy menyu
@@ -30,7 +30,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(welcome_text, reply_markup=markup, parse_mode="Markdown")
 
-# Matnli xabarlar
+# Matnli xabarlarni qayta ishlash
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
@@ -58,7 +58,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Joylashuv kelganda
 async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Joylashuvni saqlaymiz
+    # Joylashuv koordinatalarini saqlaymiz
     context.user_data['latitude'] = update.message.location.latitude
     context.user_data['longitude'] = update.message.location.longitude
 
@@ -80,7 +80,7 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lat = context.user_data.get('latitude')
     lon = context.user_data.get('longitude')
 
-    # 1. Mijozga minnatdorchilik bildirish va tasdiqlash
+    # 1. Mijozga minnatdorchilik bildirish
     await update.message.reply_text(
         f"🎉 **Buyurtmangiz uchun rahmat!**\n\n"
         f"Telefon raqamingiz: `{user_phone}`\n\n"
@@ -89,7 +89,7 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
-    # 2. Adminga yangi zakaz haqida xabar yuborish
+    # 2. Adminga yangi zakaz haqida xabar va lokatsiyani yuborish
     admin_message = (
         f"🚨 **Yangi taksi buyurtmasi qabul qilindi!**\n\n"
         f"👤 **Mijoz:** {user_name} ({username})\n"
@@ -97,7 +97,6 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     
     try:
-        # Adminga matn va geolokatsiyani yuborish
         await context.bot.send_message(chat_id=ADMIN_ID, text=admin_message, parse_mode="Markdown")
         if lat and lon:
             await context.bot.send_location(chat_id=ADMIN_ID, latitude=lat, longitude=lon)
@@ -105,8 +104,7 @@ async def handle_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logging.error(f"Adminga xabar yuborishda xatolik: {e}")
 
 if __name__ == '__main__':
-    # Bot tokeningizni kiriting
-    app = ApplicationBuilder().token("YOUR_BOT_TOKEN_HERE").build()
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
