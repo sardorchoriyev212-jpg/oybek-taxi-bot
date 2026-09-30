@@ -10,7 +10,8 @@ logging.basicConfig(
 # -------------------------------------------------------------
 # ADMIN MA'LUMOTLARI
 # Telegram ID'ingizni @userinfobot orqali bilib, shu yerga yozing:
-ADMIN_ID = 123456789  
+ADMIN_ID =  8979390721
+
 ADMIN_USERNAME = "@Asqarovich2006"
 # -------------------------------------------------------------
 
